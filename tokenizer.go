@@ -31,7 +31,7 @@ func PerformTokenization(text string, splitToken *regexp.Regexp) (words map[stri
 }
 
 func LoadStopListForLocale(locale string) []string {
-  fileBytes, _ := ioutil.ReadFile("stoplists/" + locale + ".txt")
+  fileBytes, _ := ioutil.ReadFile("./stoplists/" + locale + ".txt")
   fileContent := string(fileBytes)
 
   return strings.Split(fileContent, "\n")
@@ -49,7 +49,7 @@ func (t *ptBRTokenizer) Tokenize(text string) map[string]int64 {
 }
 
 var enWords = LoadStopListForLocale("en")
-var enToken = regexp.MustCompile(`[^\w]+|` + strings.Join(enWords, "|"))
+var enToken = regexp.MustCompile(`\b([^\w]+|` + strings.Join(enWords, "|") + `)\b`)
 
 var ptBRWords = LoadStopListForLocale("pt-BR")
-var ptBRToken = regexp.MustCompile(`[^\w]+|` + strings.Join(ptBRWords, "|"))
+var ptBRToken = regexp.MustCompile(`\b([^\w]+|` + strings.Join(ptBRWords, "|") + `)\b`)
