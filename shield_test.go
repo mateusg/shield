@@ -12,7 +12,7 @@ import (
 func compareMaps(actualMap, expectedMap map[string]int64) (errorMessage string) {
   for key, actualValue := range actualMap {
     if expectedValue := expectedMap[key]; actualValue != expectedValue {
-      errorMessage = fmt.Sprintf("Expected %v, got %v", expectedValue, key, actualValue)
+      errorMessage = fmt.Sprintf("Expected %v for key %v, got %v", expectedValue, key, actualValue)
 
       return
     }
