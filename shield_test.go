@@ -9,14 +9,16 @@ import (
 	"testing"
 )
 
-func assertEqualMaps(actualMap, expectedMap map[string]int64, t *testing.T) {
+func compareMaps(actualMap, expectedMap map[string]int64) (errorMessage string) {
   for key, actualValue := range actualMap {
     if expectedValue := expectedMap[key]; actualValue != expectedValue {
-      errorMessage := fmt.Sprintf("Expected %v for %v, got %v", expectedValue, key, actualValue)
+      errorMessage = fmt.Sprintf("Expected %v, got %v", expectedValue, key, actualValue)
 
-      t.Fatal(errorMessage)
+      return
     }
   }
+  errorMessage = ""
+  return
 }
 
 func readDataSet(dataFile, labelFile string, t *testing.T) []string {
@@ -121,7 +123,10 @@ func TestDecrement(t *testing.T) {
 	}
 
   expectedMap := map[string]int64{ "hello": 0, "sunshine": 1, "tree": 0, "water": 1 }
-  assertEqualMaps(m, expectedMap, t)
+
+  if errorMessage := compareMaps(m, expectedMap); errorMessage != "" {
+    t.Fatal(errorMessage)
+  }
 
 	m2, err := s.store.ClassWordCounts("b", []string{
 		"hello",
@@ -132,7 +137,9 @@ func TestDecrement(t *testing.T) {
 	}
 
   expectedMap2 := map[string]int64{ "hello": 0, "iamb!": 0 }
-  assertEqualMaps(m2, expectedMap2, t)
+  if errorMessage := compareMaps(m2, expectedMap2); errorMessage != "" {
+    t.Fatal(errorMessage)
+  }
 
 	wc, err := s.store.TotalClassWordCounts()
 	if err != nil {
